@@ -19,7 +19,7 @@ picture = [{
     'mime_type': 'image/jpg',
     'data': Path('photo.jpg').read_bytes()
 }]
-prompt = "ここは研究室です。この部屋でだらしない場所があれば教えて下さい。また、人が何人いるか端的に教えて下さい。ただし、お姉さん口調の日本語で回答して下さい。"
+prompt = "ここは研究室です。この部屋でだらしない場所があれば教えて下さい。また、なんでもいいので変な人がいれば指摘して下さい。ただし、150字以内でキズナアイ口調の日本語で回答して下さい。"
 
 response = model.generate_content(
     contents=[prompt, picture[0]]
@@ -51,8 +51,24 @@ def display_text():
     label = tk.Label(root, text=response.text, font=("Noto Sans CJK JP", 50), wraplength=1500)
     label.pack(expand=True)
 
+    # フォントサイズを調整する関数
+    def adjust_font_size():
+        current_font_size = 50
+        while True:
+            label.config(font=("Noto Sans CJK JP", current_font_size))
+            label.update_idletasks()
+            if label.winfo_height() <= window_height and label.winfo_width() <= window_width:
+                break
+            current_font_size -= 2  # 少しずつフォントサイズを小さく調整
+            if current_font_size < 10:  # フォントサイズの下限を設定
+                break
+    
+    # テキスト表示後にフォントサイズを調整
+    root.after(100, adjust_font_size)
+
     # 1分後に閉じる
     root.after(60000, root.destroy)
     root.mainloop()
 
-display_text()
+if __name__ == "__main__":
+    display_text()
